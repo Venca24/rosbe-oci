@@ -25,10 +25,9 @@ WORKDIR /tmp/rosbe
 RUN wget -q https://sourceforge.net/projects/reactos/files/RosBE-Unix/${ROSBE_VERSION}/RosBE-Unix-${ROSBE_VERSION}.tar.bz2 && \
     echo "${ROSBE_CHECKSUM}  RosBE-Unix-${ROSBE_VERSION}.tar.bz2" | sha512sum -c - && \
     tar -xjf RosBE-Unix-${ROSBE_VERSION}.tar.bz2 && \
-    rm RosBE-Unix-${ROSBE_VERSION}.tar.bz2
-
-WORKDIR /tmp/rosbe/RosBE-Unix-${ROSBE_VERSION}
-RUN ./RosBE-Builder.sh /usr/local/RosBE
+    rm RosBE-Unix-${ROSBE_VERSION}.tar.bz2 && \
+    cd /tmp/rosbe/RosBE-Unix-${ROSBE_VERSION} && \
+    ./RosBE-Builder.sh /usr/local/RosBE
 
 FROM docker.io/library/ubuntu:24.04
 
@@ -41,6 +40,7 @@ LABEL org.opencontainers.image.title="ReactOS Build Environment (RosBE)" \
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
     python3 \
     python-is-python3 \
     cmake \
